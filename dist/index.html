@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ABSURD TGC QUANTUM — Карточная игра</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;700&family=Courier+Prime&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="game-container">
+        <!-- Экран загрузки -->
+        <div id="loading-screen" class="screen">
+            <div class="loading-content">
+                <div class="particle-container">
+                    <div class="particle"></div>
+                    <div class="particle"></div>
+                    <div class="particle"></div>
+                </div>
+                <h1 class="game-title glitch-text" data-text="ABSURD TGC QUANTUM">ABSURD TGC QUANTUM</h1>
+                <p class="subtitle">Квантовая карточная стратегия</p>
+                <div class="loading-bar">
+                    <div class="loading-progress"></div>
+                </div>
+                <p class="loading-text">Инициализация квантового ускорителя...</p>
+            </div>
+        </div>
+
+        <!-- Главное меню -->
+        <div id="menu-screen" class="screen hidden">
+            <div class="menu-content">
+                <h1 class="menu-title glitch-text" data-text="ABSURD TGC QUANTUM">ABSURD TGC QUANTUM</h1>
+                <p class="menu-subtitle">Стандартная модель квантовой физики</p>
+                <p class="developer-credit">проект <span class="dev-name">Adiom Timur</span></p>
+                <div class="menu-particles">
+                    <div class="floating-particle" style="--delay: 0s; --x: 10%;"></div>
+                    <div class="floating-particle" style="--delay: 0.5s; --x: 80%;"></div>
+                    <div class="floating-particle" style="--delay: 1s; --x: 50%;"></div>
+                    <div class="floating-particle" style="--delay: 1.5s; --x: 30%;"></div>
+                    <div class="floating-particle" style="--delay: 2s; --x: 70%;"></div>
+                </div>
+                <button id="start-btn" class="menu-btn primary">НАЧАТЬ ИГРУ</button>
+                <button id="rules-btn" class="menu-btn secondary">ПРАВИЛА</button>
+                <button id="cards-btn" class="menu-btn secondary">ЭНЦИКЛОПЕДИЯ</button>
+            </div>
+        </div>
+
+        <!-- Экран правил -->
+        <div id="rules-screen" class="screen hidden">
+            <div class="rules-content">
+                <h2>ПРАВИЛА ИГРЫ</h2>
+                <div class="rules-text">
+                    <div class="rule-section">
+                        <h3>Цель игры</h3>
+                        <p>Уничтожить "Лабораторию" противника, доведя её здоровье до 0. Каждый игрок начинает с 30 HP.</p>
+                    </div>
+                    <div class="rule-section">
+                        <h3>Энергия (Мана)</h3>
+                        <p>В начале хода вы получаете энергию. На 1-м ходу — 1 единица, затем +1 каждый ход (максимум 10).</p>
+                    </div>
+                    <div class="rule-section">
+                        <h3>Шкала Энтропии</h3>
+                        <p>С каждой разыгранной картой энтропия растёт! При достижении 100% происходит <strong>Квантовый Коллапс</strong> — абсурдное случайное событие!</p>
+                    </div>
+                    <div class="rule-section">
+                        <h3>Карты</h3>
+                        <p><strong>Кварки</strong> — мощные юниты с высокой атакой.<br>
+                        <strong>Лептоны</strong> — быстрые юниты с особыми эффектами.<br>
+                        <strong>Бозоны</strong> — заклинания с мгновенным действием.<br>
+                        <strong>Абсурдные карты</strong> — специальные карты с безумными квантовыми эффектами!</p>
+                    </div>
+                    <div class="rule-section">
+                        <h3>Типы частиц</h3>
+                        <div class="particle-types">
+                            <span class="type-badge quark">Кварки</span>
+                            <span class="type-badge lepton">Лептоны</span>
+                            <span class="type-badge boson">Бозоны</span>
+                            <span class="type-badge absurd">Абсурд</span>
+                        </div>
+                    </div>
+                </div>
+                <button id="back-btn" class="menu-btn">ВЕРНУТЬСЯ</button>
+            </div>
+        </div>
+
+        <!-- Экран карт (Энциклопедия частиц) -->
+        <div id="cards-screen" class="screen hidden">
+            <div class="cards-content">
+                <h2>ЭНЦИКЛОПЕДИЯ ЧАСТИЦ</h2>
+                <p class="cards-intro">Изучите фундаментальные частицы Стандартной модели</p>
+                <div class="cards-filter">
+                    <button class="filter-btn active" data-filter="all">Все</button>
+                    <button class="filter-btn" data-filter="quark">Кварки</button>
+                    <button class="filter-btn" data-filter="lepton">Лептоны</button>
+                    <button class="filter-btn" data-filter="boson">Бозоны</button>
+                    <button class="filter-btn" data-filter="absurd">Абсурд</button>
+                </div>
+                <div id="cards-grid" class="cards-grid">
+                    <!-- Карты будут сгенерированы через JavaScript -->
+                </div>
+                <button id="cards-back-btn" class="menu-btn">ВЕРНУТЬСЯ</button>
+            </div>
+        </div>
+
+        <!-- Игровое поле -->
+        <div id="game-screen" class="screen hidden">
+            <!-- Шкала энтропии -->
+            <div id="entropy-container">
+                <div class="entropy-label">ЭНТРОПИЯ</div>
+                <div class="entropy-bar">
+                    <div id="entropy-fill" class="entropy-fill"></div>
+                </div>
+                <div id="entropy-percent">0%</div>
+            </div>
+
+            <!-- Верхняя часть — Противник (ИИ) -->
+            <div id="opponent-area">
+                <div id="opponent-hero" class="hero-area">
+                    <div class="hero-portrait opponent">
+                        <div class="portrait-image">
+                            <svg viewBox="0 0 100 100" class="portrait-svg">
+                                <circle cx="50" cy="50" r="45" fill="#1a1a2e" stroke="#e94560" stroke-width="2"/>
+                                <text x="50" y="55" text-anchor="middle" fill="#e94560" font-size="30">🤖</text>
+                            </svg>
+                        </div>
+                        <div class="hero-stats">
+                            <div class="health-bar">
+                                <div class="health-fill opponent"></div>
+                                <span class="health-text"><span id="opponent-hp">30</span>/30</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="opponent-mana" class="mana-display">
+                        <span class="mana-icon">◆</span>
+                        <span id="opponent-mana-text">1/10</span>
+                    </div>
+                </div>
+                <div id="opponent-hand" class="hand-area">
+                    <!-- Карты противника (рубашкой вверх) -->
+                </div>
+            </div>
+
+            <!-- Центральная часть — Игровое поле -->
+            <div id="battlefield">
+                <div id="ai-play-area" class="play-area">
+                    <!-- Карты ИИ на столе -->
+                </div>
+                <div id="center-effect" class="center-effect hidden">
+                    <div class="effect-animation"></div>
+                </div>
+                <div id="player-play-area" class="play-area">
+                    <!-- Карты игрока на столе -->
+                </div>
+            </div>
+
+            <!-- Нижняя часть — Игрок -->
+            <div id="player-area">
+                <div id="player-hand" class="hand-area">
+                    <!-- Карты игрока -->
+                </div>
+                <div id="player-hero" class="hero-area">
+                    <div class="hero-portrait player">
+                        <div class="portrait-image">
+                            <svg viewBox="0 0 100 100" class="portrait-svg">
+                                <circle cx="50" cy="50" r="45" fill="#1a1a2e" stroke="#45a29e" stroke-width="2"/>
+                                <text x="50" y="55" text-anchor="middle" fill="#45a29e" font-size="30">👤</text>
+                            </svg>
+                        </div>
+                        <div class="hero-stats">
+                            <div class="health-bar">
+                                <div class="health-fill player"></div>
+                                <span class="health-text"><span id="player-hp">30</span>/30</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="player-mana" class="mana-display">
+                        <span class="mana-icon">◆</span>
+                        <span id="player-mana-text">1/10</span>
+                    </div>
+                    <button id="end-turn-btn" class="end-turn-btn">ЗАВЕРШИТЬ ХОД</button>
+                </div>
+            </div>
+
+            <!-- Интерфейс -->
+            <div id="game-hud">
+                <div id="turn-indicator">ХОД ИГРОКА</div>
+                <div id="game-log">
+                    <div class="log-content">
+                        <p class="log-entry system">Добро пожаловать в ABSURD TGC QUANTUM!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Всплывающее сообщение -->
+            <div id="toast-message" class="toast hidden">
+                <div class="toast-content">
+                    <div class="toast-icon"></div>
+                    <div class="toast-text"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Экран квантового коллапса -->
+        <div id="collapse-screen" class="screen hidden">
+            <div class="collapse-content">
+                <h2 class="collapse-title">⚠️ КВАНТОВЫЙ КОЛЛАПС ⚠️</h2>
+                <p class="collapse-description"></p>
+            </div>
+        </div>
+
+        <!-- Экран победы/поражения -->
+        <div id="end-screen" class="screen hidden">
+            <div class="end-content">
+                <div id="end-result" class="end-result">
+                    <h1 id="end-title">ПОБЕДА!</h1>
+                    <p id="end-message">Вы успешно завершили квантовый эксперимент!</p>
+                </div>
+                <div class="end-stats">
+                    <p>Ходов сыграно: <span id="total-turns">0</span></p>
+                    <p>Карт использовано: <span id="cards-played">0</span></p>
+                    <p>Коллапсов пережито: <span id="collapse-count">0</span></p>
+                </div>
+                <button id="restart-btn" class="menu-btn primary">ИГРАТЬ СНОВА</button>
+            </div>
+        </div>
+
+        <!-- Модальное окно выбора цели -->
+        <div id="target-modal" class="modal hidden">
+            <div class="modal-content">
+                <h3>Выберите цель</h3>
+                <div id="target-options"></div>
+                <button id="cancel-target" class="menu-btn secondary">Отмена</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
